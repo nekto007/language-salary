@@ -1,38 +1,38 @@
-import os
 from itertools import count
 
-from dotenv import load_dotenv
+import requests
 
 from analytics import predict_salary
 
-load_dotenv()
-HH_API_BASE_URL = os.getenv("HH_API_BASE_URL")
+MOSCOW_AREA = 1
+PERIOD_IN_DAYS = 30
 
 
 def predict_rub_salary_hh(vacancy: dict):
     salary = vacancy.get('salary')
-    salary_from = salary.get('from')
-    salary_to = salary.get('to')
-    if salary.get("currency") == "RUR":
+    if salary is None:
+        return None
+    elif salary.get("currency") == "RUR":
+        salary_from = salary.get('from')
+        salary_to = salary.get('to')
         return predict_salary(salary_from, salary_to)
 
 
-def fetch_vacancies_from_hh(language):
-    import requests
-    url = HH_API_BASE_URL
+def fetch_vacancies_from_hh(language, base_url):
+    url = base_url
     vacancies = []
     for page in count(0):
         params = {
-            "area": 1,
-            "period": 30,
-            "only_with_salary": True,
+            "area": MOSCOW_AREA,
+            "period": PERIOD_IN_DAYS,
             "text": f'программист {language}',
             "page": page
         }
         response = requests.get(url, params)
         response.raise_for_status()
-        data_vacancies = response.json()
-        vacancies.extend(data_vacancies['items'])
-        if page >= data_vacancies['pages']:
+        vacancies_page = response.json()
+        vacancies.extend(vacancies_page['items'])
+
+        if page >= vacancies_page['pages'] or page == 99:  # "You can't look up more than 2000 items in the list"
             break
     return vacancies
