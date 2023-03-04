@@ -19,12 +19,10 @@ pip install -r requirements.txt
 
 ### Переменные окружения
 
-Для работы приложения нужно получить секретный ключ для доступа к API SuperJobs и указать его в переменную 
-SUPERJOB_TOKEN в файле `.env`
-URL доступы к API HeadHunter(HH_API_BASE_URL) и SuperJobs(SJ_API_BASE_URL) уже указаны в .env:
+Для доступа к API SuperJob программа берёт секретный ключ (Secret key) из переменных окружения. 
+Чтобы его задать, создайте файл .env в той же папке, где и скрипт, и запишите туда данные 
+в формате ПЕРЕМЕННАЯ=значение:
 ```
-HH_API_BASE_URL="https://api.hh.ru/vacancies"
-SJ_API_BASE_URL="https://api.superjob.ru/2.0/vacancies/"
 SUPERJOB_TOKEN={ваш_секретный_ключ_API_SuperJob}
 ```
 Здесь вместо {ваш_секретный_ключ_API_SuperJob} нужно подставить ваш ключ, который вы можете получить 
