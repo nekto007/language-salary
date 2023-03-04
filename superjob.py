@@ -1,13 +1,10 @@
-import os
-
 import requests
-from dotenv import load_dotenv
 
 from analytics import predict_salary
 
-load_dotenv()
-SJ_API_BASE_URL = os.getenv("SJ_API_BASE_URL")
-SUPERJOB_TOKEN = os.getenv("SUPERJOB_TOKEN")
+SALARY_NO_AGREEMENT = 1
+MOSCOW_ID = 4
+IT_SECTION = 33
 
 
 def predict_rub_salary_sj(vacancy: dict):
@@ -17,13 +14,13 @@ def predict_rub_salary_sj(vacancy: dict):
         return predict_salary(salary_from, salary_to)
 
 
-def fetch_vacancies_from_sj(language):
-    headers = {'X-Api-App-Id': SUPERJOB_TOKEN}
-    url = SJ_API_BASE_URL
+def fetch_vacancies_from_sj(language, superjob_token, sj_api_base_url):
+    headers = {'X-Api-App-Id': superjob_token}
+    url = sj_api_base_url
     params = {
-        'catalogues': 33,
-        'no_agreement': 1,
-        'town': 4,
+        'catalogues': IT_SECTION,
+        'no_agreement': SALARY_NO_AGREEMENT,
+        'town': MOSCOW_ID,
         'keyword': language,
     }
     page = 0
@@ -33,8 +30,8 @@ def fetch_vacancies_from_sj(language):
         params['page'] = page
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
-        data_vacancies = response.json()
-        more_pages = data_vacancies['more']
-        vacancies.extend(data_vacancies['objects'])
+        vacancies_page = response.json()
+        more_pages = vacancies_page['more']
+        vacancies.extend(vacancies_page['objects'])
         page += 1
     return vacancies
