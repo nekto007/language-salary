@@ -8,12 +8,12 @@ def predict_salary(salary_from: int, salary_to: int):
 
 
 def get_statistics(language, vacancies, predict_salaries):
-    predict_salaries = [predict_salary for predict_salary in predict_salaries if predict_salary]
+    salary_list_filtered = [predict_salary for predict_salary in predict_salaries if predict_salary]
     vacancies_found = len(vacancies)
-    vacancies_processed = len(predict_salaries)
+    vacancies_processed = len(salary_list_filtered)
 
-    if predict_salaries:
-        average_salary = str(sum(predict_salaries) // len(predict_salaries))
+    if salary_list_filtered:
+        average_salary = str(sum(salary_list_filtered) // len(salary_list_filtered))
     else:
         average_salary = '-'
 
