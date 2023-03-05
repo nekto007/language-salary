@@ -10,7 +10,7 @@ PERIOD_IN_DAYS = 30
 
 def predict_rub_salary_hh(vacancy: dict):
     salary = vacancy.get('salary')
-    if salary is None:
+    if not salary:
         return None
     elif salary.get("currency") == "RUR":
         salary_from = salary.get('from')
